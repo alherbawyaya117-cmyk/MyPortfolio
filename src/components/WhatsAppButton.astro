@@ -1,0 +1,64 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  /** Where the button sits, sent with the analytics click event. */
+  placement: string;
+  class?: string;
+}
+
+const { href, label, placement, class: className } = Astro.props;
+---
+
+<a class:list={['wa', className]} href={href} target="_blank" rel="noopener" data-wa={placement}>
+  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      d="M4 20.25l1.25-3.7A8.25 8.25 0 1 1 8.5 19.4z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linejoin="round"></path>
+    <path
+      d="M9.3 8.2c.25-.45.6-.55.9-.55h.45c.2 0 .4.12.48.32l.62 1.5c.08.2.04.43-.1.6l-.5.58c.42.9 1.16 1.64 2.06 2.06l.58-.5c.17-.14.4-.18.6-.1l1.5.62c.2.08.32.28.32.48v.45c0 .3-.1.65-.55.9-.6.33-1.62.42-3.08-.38a7.6 7.6 0 0 1-3.08-3.08c-.8-1.46-.71-2.48-.38-3.08z"
+      fill="currentColor"></path>
+  </svg>
+  <span>{label}</span>
+</a>
+
+<style>
+  .wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 54px;
+    padding-inline: 26px;
+    border-radius: 999px;
+    border: 1px solid var(--btn-border);
+    background: var(--btn-bg);
+    color: var(--btn-ink);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: var(--btn);
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .wa:hover {
+    background: #e8920c;
+  }
+
+  .wa:active {
+    transform: translateY(1px);
+  }
+
+  svg {
+    flex: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .wa {
+      transition: background-color 0.15s ease;
+    }
+  }
+</style>

@@ -1,0 +1,142 @@
+---
+import { site } from '../config/site';
+import type { Copy } from '../i18n';
+
+interface Props {
+  c: Copy;
+}
+
+const { c } = Astro.props;
+---
+
+{
+  site.gaMeasurementId && (
+    <div class="consent" role="region" aria-label={c.footer.cookieSettings} data-consent data-ga-id={site.gaMeasurementId} hidden>
+      <p class="small text">{c.consent.text}</p>
+      <div class="actions">
+        <button class="choice accept" type="button" data-consent-choice="granted">
+          {c.consent.accept}
+        </button>
+        <button class="choice" type="button" data-consent-choice="denied">
+          {c.consent.decline}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .consent {
+    position: fixed;
+    inset-inline: 12px;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    max-width: 560px;
+    padding: 16px 18px;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+  }
+
+  .consent[hidden] {
+    display: none;
+  }
+
+  .text {
+    flex: 1 1 260px;
+    color: var(--ink);
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .choice {
+    min-height: 44px;
+    padding-inline: 18px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--heading);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .accept {
+    background: var(--heading);
+    border-color: var(--heading);
+    color: var(--paper);
+  }
+
+  @media (min-width: 60rem) {
+    .consent {
+      inset-inline: var(--gutter) auto;
+    }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'analytics-consent';
+  const banner = document.querySelector<HTMLElement>('[data-consent]');
+  const measurementId = banner?.dataset.gaId;
+
+  function loadAnalytics(id: string) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function gtag() {
+      // gtag.js expects the arguments object itself.
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer.push(arguments);
+    };
+    window.gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'granted',
+    });
+    window.gtag('js', new Date());
+    window.gtag('config', id);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+    document.head.append(script);
+  }
+
+  if (banner && measurementId) {
+    let choice: string | null = null;
+    try {
+      choice = localStorage.getItem(STORAGE_KEY);
+    } catch {}
+
+    if (choice === 'granted') loadAnalytics(measurementId);
+    else if (choice !== 'denied') banner.hidden = false;
+
+    banner.addEventListener('click', (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>('[data-consent-choice]');
+      if (!button) return;
+      const value = button.dataset.consentChoice ?? 'denied';
+      try {
+        localStorage.setItem(STORAGE_KEY, value);
+      } catch {}
+      banner.hidden = true;
+      if (value === 'granted' && !window.gtag) loadAnalytics(measurementId);
+      if (value === 'denied' && window.gtag) window.gtag('consent', 'update', { analytics_storage: 'denied' });
+    });
+
+    document.querySelector('[data-cookie-settings]')?.addEventListener('click', () => {
+      banner.hidden = false;
+      banner.querySelector('button')?.focus();
+    });
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = (event.target as Element).closest<HTMLElement>('[data-wa], [data-track]');
+    if (!target || typeof window.gtag !== 'function') return;
+    if (target.dataset.wa) window.gtag('event', 'whatsapp_click', { placement: target.dataset.wa });
+    else if (target.dataset.track) window.gtag('event', target.dataset.track);
+  });
+</script>

@@ -1,0 +1,64 @@
+---
+import type { Copy } from '../i18n';
+import SectionHead from './SectionHead.astro';
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  c: Copy;
+  waHref: string;
+}
+
+const { c, waHref } = Astro.props;
+---
+
+<section id="how" class="wrap how" aria-labelledby="how-title">
+  <SectionHead num="04" label={c.nav.sections.how} />
+  <h2 id="how-title" class="display-h2 section-title">{c.how.title}</h2>
+  <ol class="grid rule-list">
+    {
+      c.how.steps.map((step, i) => (
+        <li>
+          <span class="label step">
+            {c.how.stepWord} {i + 1}
+          </span>
+          <h3 class="display-h3">{step.title}</h3>
+          <p>{step.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="cta" data-cta-anchor>
+    <WhatsAppButton href={waHref} label={c.how.cta} placement="how-it-works" />
+  </div>
+</section>
+
+<style>
+  .how {
+    padding-block: clamp(72px, 11vw, 136px);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+    column-gap: clamp(24px, 3vw, 40px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-block: 18px 30px;
+  }
+
+  .step {
+    color: var(--numeral);
+  }
+
+  p {
+    max-width: 34ch;
+  }
+
+  .cta {
+    padding-block-start: 16px;
+  }
+</style>

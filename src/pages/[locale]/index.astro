@@ -1,0 +1,40 @@
+---
+import About from '../../components/About.astro';
+import Approach from '../../components/Approach.astro';
+import ConsentBanner from '../../components/ConsentBanner.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Hero from '../../components/Hero.astro';
+import HowItWorks from '../../components/HowItWorks.astro';
+import Learning from '../../components/Learning.astro';
+import Services from '../../components/Services.astro';
+import StickyCta from '../../components/StickyCta.astro';
+import { whatsappHref } from '../../config/site';
+import { getCopy, locales, type Locale } from '../../i18n';
+import Base from '../../layouts/Base.astro';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const c = getCopy(locale);
+const waHref = whatsappHref(c.whatsappMessage);
+---
+
+<Base locale={locale} title={c.meta.title} description={c.meta.description}>
+  <Header c={c} locale={locale} />
+  <main id="main">
+    <Hero c={c} waHref={waHref} />
+    <About c={c} />
+    <Services c={c} />
+    <Approach c={c} />
+    <HowItWorks c={c} waHref={waHref} />
+    <Learning c={c} locale={locale} />
+    <Contact c={c} waHref={waHref} />
+  </main>
+  <Footer c={c} />
+  <StickyCta c={c} waHref={waHref} />
+  <ConsentBanner c={c} />
+</Base>

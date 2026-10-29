@@ -1,0 +1,98 @@
+---
+import { Image } from 'astro:assets';
+import type { Copy } from '../i18n';
+
+interface Props {
+  c: Copy;
+}
+
+const { c } = Astro.props;
+
+// Drop the professional photo at src/assets/portrait.(jpg|jpeg|png|webp), cropped 4:5, and it replaces the placeholder.
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/portrait.{jpg,jpeg,png,webp}', {
+  eager: true,
+});
+const photo = Object.values(photos)[0]?.default;
+---
+
+<figure class="portrait">
+  {
+    photo ? (
+      <Image
+        class="photo"
+        src={photo}
+        alt={c.hero.portraitAlt}
+        widths={[360, 540, 720, 880]}
+        sizes="(min-width: 900px) 440px, 100vw"
+        loading="eager"
+      />
+    ) : (
+      <div class="placeholder">
+        <div class="frame">
+          <span class="label">{c.hero.portraitTitle}</span>
+          <span class="ph-note">{c.hero.portraitNote}</span>
+        </div>
+      </div>
+    )
+  }
+  <figcaption class="small">{c.hero.caption}</figcaption>
+</figure>
+
+<style>
+  .portrait {
+    flex: 1 1 300px;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* The source is 3:4; cropping to 4:5 trims mostly from the bottom so the head keeps its headroom. */
+  .photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 20%;
+  }
+
+  /* Take the edge off the bright backdrop on the dark theme. */
+  :global(:root[data-theme='dark']) .photo {
+    filter: brightness(0.92);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .photo {
+      filter: brightness(0.92);
+    }
+  }
+
+  .placeholder {
+    display: flex;
+    aspect-ratio: 4 / 5;
+    padding: 14px;
+    background: var(--ph-bg);
+  }
+
+  .frame {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    border: 1px solid var(--ph-line);
+    color: var(--ph-ink);
+    text-align: center;
+  }
+
+  .frame .label {
+    color: var(--ph-ink);
+  }
+
+  .ph-note {
+    font-family: var(--font-display);
+    font-style: var(--emphasis);
+    font-size: var(--small);
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import type { Copy } from '../i18n';
+import Portrait from './Portrait.astro';
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  c: Copy;
+  waHref: string;
+}
+
+const { c, waHref } = Astro.props;
+---
+
+<section class="wrap hero" aria-labelledby="hero-title">
+  <div class="text">
+    <p class="label">{c.hero.kicker}</p>
+    <h1 id="hero-title">{c.hero.title}</h1>
+    <p class="deck lede">{c.hero.deck}</p>
+    <div class="actions" data-cta-anchor>
+      <WhatsAppButton href={waHref} label={c.cta} placement="hero" />
+      <a class="link secondary" href="#how">{c.hero.secondary} <span aria-hidden="true">↓</span></a>
+    </div>
+  </div>
+  <Portrait c={c} />
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: clamp(40px, 6vw, 80px);
+    padding-block: clamp(32px, 7vw, 88px) clamp(56px, 9vw, 112px);
+  }
+
+  .text {
+    flex: 1 1 460px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--h1);
+    line-height: var(--h1-lh);
+    letter-spacing: var(--track-tight);
+    color: var(--heading);
+  }
+
+  .lede {
+    max-width: 34ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 28px;
+    padding-block-start: 8px;
+  }
+
+  .secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    font-size: var(--btn);
+  }
+</style>

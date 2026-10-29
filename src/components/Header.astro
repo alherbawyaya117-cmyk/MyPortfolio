@@ -1,0 +1,257 @@
+---
+import { otherLocale, sectionIds, type Copy, type Locale } from '../i18n';
+
+interface Props {
+  c: Copy;
+  locale: Locale;
+}
+
+const { c, locale } = Astro.props;
+const other = otherLocale(locale);
+---
+
+<a class="skip" href="#main">{c.skipLink}</a>
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={`/${locale}/`}>{c.name}</a>
+    <div class="tools">
+      <a
+        class="tool lang"
+        href={`/${other}/`}
+        hreflang={other}
+        lang={other}
+        aria-label={c.switchLanguage.label}
+        data-lang-switch={other}>{c.switchLanguage.short}</a
+      >
+      <button class="tool" type="button" aria-pressed="false" aria-label={c.nav.theme} data-theme-toggle>
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.25" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+          <path d="M10 2.75a7.25 7.25 0 0 1 0 14.5z" fill="currentColor"></path>
+        </svg>
+      </button>
+      <details class="menu" data-menu>
+        <summary class="tool menu-btn label">
+          <span class="when-closed">{c.nav.menu}</span>
+          <span class="when-open">{c.nav.close}</span>
+        </summary>
+        <nav class="panel" aria-label={c.nav.label}>
+          <ol class="wrap list">
+            {
+              sectionIds.map((id, i) => (
+                <li>
+                  <a href={`#${id}`}>
+                    <span class="num">{String(i + 1).padStart(2, '0')}</span>
+                    <span>{c.nav.sections[id]}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .skip {
+    position: absolute;
+    inset-inline-start: 12px;
+    top: -100px;
+    z-index: 50;
+    padding: 10px 16px;
+    background: var(--btn-bg);
+    color: var(--btn-ink);
+    font-weight: 600;
+  }
+
+  .skip:focus {
+    top: 12px;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--paper);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-block: 8px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-display);
+    font-style: var(--emphasis);
+    font-weight: var(--brand-weight);
+    font-size: var(--brand);
+    line-height: 1.1;
+    color: var(--heading);
+    text-decoration: none;
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .tool {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
+    color: var(--heading);
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  /* The switch is written in the other language's own script. */
+  .lang:lang(ar) {
+    font-family: 'Geeza Pro', 'Noto Naskh Arabic', 'Segoe UI', serif;
+    font-size: 1.5rem;
+  }
+
+  .lang:lang(en) {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+  }
+
+  .menu-btn {
+    list-style: none;
+    color: var(--heading);
+    padding-inline: 10px 4px;
+  }
+
+  .menu-btn::-webkit-details-marker {
+    display: none;
+  }
+
+  .when-open,
+  .menu[open] .when-closed {
+    display: none;
+  }
+
+  .menu[open] .when-open {
+    display: inline;
+  }
+
+  .panel {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    background: var(--paper);
+    border-block: 1px solid var(--rule);
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    column-gap: 40px;
+    padding-block: 8px 32px;
+  }
+
+  .list li {
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .list a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    min-height: 44px;
+    padding-block: 14px;
+    font-family: var(--font-display);
+    font-size: var(--menu);
+    line-height: 1.15;
+    color: var(--heading);
+    text-decoration: none;
+  }
+
+  .list a:hover span:last-child {
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  .num {
+    font-size: 1rem;
+    color: var(--numeral);
+    font-variant-numeric: oldstyle-nums;
+  }
+</style>
+
+<script>
+  import { site } from '../config/site';
+
+  type Theme = 'light' | 'dark';
+  const paper: Record<Theme, string> = { light: site.colors.lightPaper, dark: site.colors.darkPaper };
+
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  const themeMetas = document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]');
+
+  const manualTheme = (): Theme | undefined =>
+    root.dataset.theme === 'light' || root.dataset.theme === 'dark' ? root.dataset.theme : undefined;
+  const effectiveTheme = (): Theme => manualTheme() ?? (media.matches ? 'dark' : 'light');
+
+  function syncTheme() {
+    const theme = effectiveTheme();
+    const manual = manualTheme();
+    toggle?.setAttribute('aria-pressed', String(theme === 'dark'));
+    // A manual choice overrides the OS-based theme-color pair so the phone's browser bar matches the page.
+    themeMetas.forEach((meta) => {
+      meta.content = manual ? paper[manual] : (meta.dataset.default ?? meta.content);
+    });
+  }
+
+  toggle?.addEventListener('click', () => {
+    const next: Theme = effectiveTheme() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    syncTheme();
+  });
+  media.addEventListener('change', syncTheme);
+  syncTheme();
+
+  const menu = document.querySelector<HTMLDetailsElement>('[data-menu]');
+  if (menu) {
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => (menu.open = false)));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+  }
+
+  // Remembered by the root page, which sends returning visitors to their language.
+  document.querySelector<HTMLAnchorElement>('[data-lang-switch]')?.addEventListener('click', (event) => {
+    try {
+      localStorage.setItem('lang', (event.currentTarget as HTMLAnchorElement).dataset.langSwitch ?? '');
+    } catch {}
+  });
+</script>

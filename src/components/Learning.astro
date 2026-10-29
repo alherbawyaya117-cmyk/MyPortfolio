@@ -1,0 +1,171 @@
+---
+import { conferences, education } from '../data/learning';
+import { formatDate, type Copy, type Locale } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  c: Copy;
+  locale: Locale;
+}
+
+const { c, locale } = Astro.props;
+
+const conferenceEntries = conferences.map((conference) => ({
+  iso: conference.date,
+  date: formatDate(conference.date, locale),
+  title: conference.title[locale],
+  venue: conference.venue[locale],
+  details: [
+    conference.cpdCredits === undefined ? undefined : c.learning.cpdCredits(conference.cpdCredits),
+    conference.note?.[locale],
+  ]
+    .filter(Boolean)
+    .join(' · '),
+  url: conference.url,
+}));
+
+const educationEntries = education.map((entry) => ({
+  years: `${entry.start} – ${entry.end ?? c.learning.now}`,
+  title: entry.inProgress ? `${entry.title[locale]} (${c.learning.inProgress})` : entry.title[locale],
+  school: entry.school[locale],
+}));
+---
+
+<section id="learning" class="wrap section" aria-labelledby="learning-title">
+  <SectionHead num="05" label={c.nav.sections.learning} />
+  <div class="cols">
+    <div class="intro">
+      <h2 id="learning-title" class="display-h2">{c.learning.title}</h2>
+      <p>{c.learning.intro}</p>
+    </div>
+    <div class="lists">
+      <div>
+        <h3 class="label list-title">{c.learning.conferencesTitle}</h3>
+        <ol class="entries conferences">
+          {
+            conferenceEntries.map((entry) => (
+              <li>
+                <time class="when" datetime={entry.iso}>
+                  {entry.date}
+                </time>
+                <div class="what">
+                  <span class="title">{entry.title}</span>
+                  <span class="label venue">{entry.venue}</span>
+                  {entry.details && <span class="small">{entry.details}</span>}
+                  {entry.url && (
+                    <a class="link small more" href={entry.url} target="_blank" rel="noopener">
+                      {c.learning.viewPost} <span aria-hidden="true">{c.externalArrow}</span>
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+      <div>
+        <h3 class="label list-title">{c.learning.educationTitle}</h3>
+        <ol class="entries">
+          {
+            educationEntries.map((entry) => (
+              <li>
+                <span class="when">{entry.years}</span>
+                <div class="what">
+                  <span class="title">{entry.title}</span>
+                  <span class="label venue">{entry.school}</span>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(36px, 6vw, 96px);
+    padding-block-start: clamp(28px, 5vw, 48px);
+  }
+
+  .intro {
+    flex: 1 1 340px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .intro p {
+    max-width: 40ch;
+  }
+
+  .lists {
+    flex: 2 1 520px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .list-title {
+    margin-block-end: 12px;
+  }
+
+  .entries li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 28px;
+    padding-block: 16px 18px;
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .conferences li {
+    padding-block: 18px 24px;
+    border-color: var(--rule-strong);
+  }
+
+  .when {
+    flex: 0 0 160px;
+    font-family: var(--font-display);
+    font-size: var(--fact);
+    line-height: 1.4;
+    color: var(--numeral);
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  .what {
+    flex: 1 1 280px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-style: var(--emphasis);
+    font-weight: var(--emphasis-weight);
+    font-size: var(--entry);
+    line-height: 1.25;
+    color: var(--heading);
+    text-wrap: balance;
+  }
+
+  .venue {
+    color: var(--muted);
+    font-weight: inherit;
+  }
+
+  .more {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    color: var(--heading);
+  }
+</style>

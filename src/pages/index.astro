@@ -1,0 +1,31 @@
+---
+// Sends visitors to their language: a saved choice first, then the browser's languages, else English.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aya Al-Herbawy</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={new URL('/en/', Astro.site).href} />
+    <script is:inline>
+      (() => {
+        let lang = null;
+        try {
+          lang = localStorage.getItem('lang');
+        } catch {}
+        if (lang !== 'en' && lang !== 'ar') {
+          const preferred = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+          lang = preferred.some((l) => /^ar\b/i.test(l)) ? 'ar' : 'en';
+        }
+        location.replace('/' + lang + '/');
+      })();
+    </script>
+    <noscript><meta http-equiv="refresh" content="0; url=/en/" /></noscript>
+  </head>
+  <body>
+    <p><a href="/en/">English</a> · <a href="/ar/" lang="ar" dir="rtl">العربية</a></p>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+---
+import { site } from '../config/site';
+import type { Copy } from '../i18n';
+
+interface Props {
+  c: Copy;
+}
+
+const { c } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="wrap row small">
+    <span>{c.footer.rights}</span>
+    {
+      site.gaMeasurementId && (
+        <button class="link settings" type="button" data-cookie-settings>
+          {c.footer.cookieSettings}
+        </button>
+      )
+    }
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 32px;
+    padding-block: 24px 28px;
+  }
+
+  .settings {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--muted);
+    cursor: pointer;
+  }
+</style>

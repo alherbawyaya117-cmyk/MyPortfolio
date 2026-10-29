@@ -1,0 +1,304 @@
+/* Colour tokens. Light is "warm paper", dark is "olive night"; both come from the
+   Military Modern palette (slate, olive, amber, khaki). Dark tokens are repeated for
+   the system setting and for a manual choice saved by the theme toggle. */
+:root {
+  color-scheme: light;
+  --paper: #f2f3ef;
+  --ink: #1c1c1c;
+  --heading: #2c3e50;
+  --muted: #5c6869;
+  --label: #4a5d23;
+  --numeral: #8a5604;
+  --underline: #c77e08;
+  --rule: #cfd2c8;
+  --rule-strong: #2c3e50;
+  --ph-bg: #d4d6a7;
+  --ph-ink: #1c1c1c;
+  --ph-line: #4a5d23;
+  --band: #2c3e50;
+  --band-ink: #f5f5f5;
+  --band-muted: #bdc3c7;
+  --band-accent: #f39c12;
+  --band-rule: #4b5d70;
+  --btn-bg: #f39c12;
+  --btn-ink: #1c1c1c;
+  --btn-border: #b97406;
+  --focus: #8a5604;
+  --selection: #d4d6a7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --paper: #1b1d17;
+    --ink: #edede2;
+    --heading: #edede2;
+    --muted: #bdc3c7;
+    --label: #98ae72;
+    --numeral: #f39c12;
+    --underline: #f39c12;
+    --rule: #34372f;
+    --rule-strong: #d4d6a7;
+    --ph-bg: #272a24;
+    --ph-ink: #edede2;
+    --ph-line: #98ae72;
+    --band-ink: #edede2;
+    --btn-border: #f39c12;
+    --focus: #f39c12;
+    --selection: #4a5d23;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #1b1d17;
+  --ink: #edede2;
+  --heading: #edede2;
+  --muted: #bdc3c7;
+  --label: #98ae72;
+  --numeral: #f39c12;
+  --underline: #f39c12;
+  --rule: #34372f;
+  --rule-strong: #d4d6a7;
+  --ph-bg: #272a24;
+  --ph-ink: #edede2;
+  --ph-line: #98ae72;
+  --band-ink: #edede2;
+  --btn-border: #f39c12;
+  --focus: #f39c12;
+  --selection: #4a5d23;
+}
+
+/* Type tokens. Phone sizes first; clamp() grows them toward desktop. */
+:root {
+  --font-display: 'Literata Variable', Georgia, 'Times New Roman', serif;
+  --font-body: 'Hanken Grotesk Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-label: var(--font-display);
+  --label-caps: all-small-caps;
+  --label-track: 0.08em;
+  --label-weight: 500;
+  --label-size: 1.125rem;
+  --emphasis: italic;
+  --emphasis-weight: 400;
+  --track-tight: -0.022em;
+  --h1: clamp(3.1rem, 14vw, 7.25rem);
+  --h1-lh: 0.96;
+  --h2: clamp(2.1rem, 7.5vw, 4.25rem);
+  --h2-lh: 1.04;
+  --h3: 1.55rem;
+  --h3-lh: 1.18;
+  --h3-weight: 500;
+  --deck: clamp(1.25rem, 4.4vw, 1.625rem);
+  --deck-lh: 1.38;
+  --deck-weight: 400;
+  --body: 1.0625rem;
+  --body-lh: 1.62;
+  --small: 0.9375rem;
+  --small-lh: 1.5;
+  --btn: 1.0625rem;
+  --fact: 1.15rem;
+  --entry: 1.35rem;
+  --brand: 1.3rem;
+  --brand-weight: 400;
+  --menu: clamp(1.6rem, 6vw, 2.2rem);
+  --numeral-big: clamp(2.75rem, 9vw, 4rem);
+  --contact-h: clamp(2.6rem, 11vw, 6rem);
+  --gutter: clamp(20px, 5vw, 56px);
+  --max: 1200px;
+  --header-h: 61px;
+}
+
+/* Arabic is typeset, not mirrored: no italics or small caps, no tracking,
+   bigger sizes and looser leading so dots and diacritics never clip. */
+:root:lang(ar) {
+  --font-display: 'Markazi Text Variable', 'Geeza Pro', 'Noto Naskh Arabic', serif;
+  --font-body: var(--font-display);
+  --label-caps: normal;
+  --label-track: 0;
+  --label-weight: 600;
+  --label-size: 1.2rem;
+  --emphasis: normal;
+  --emphasis-weight: 600;
+  --track-tight: 0;
+  --h1: clamp(3rem, 13.5vw, 6.75rem);
+  --h1-lh: 1.18;
+  --h2: clamp(2.3rem, 8.5vw, 4.5rem);
+  --h2-lh: 1.22;
+  --h3: 1.85rem;
+  --h3-lh: 1.35;
+  --h3-weight: 600;
+  --deck: clamp(1.45rem, 5.4vw, 1.9rem);
+  --deck-lh: 1.6;
+  --deck-weight: 500;
+  --body: 1.3rem;
+  --body-lh: 1.85;
+  --small: 1.12rem;
+  --small-lh: 1.7;
+  --btn: 1.25rem;
+  --fact: 1.35rem;
+  --entry: 1.55rem;
+  --brand: 1.6rem;
+  --brand-weight: 700;
+  --menu: clamp(1.8rem, 7vw, 2.5rem);
+  --contact-h: clamp(2.75rem, 11vw, 6rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 8px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--body);
+  line-height: var(--body-lh);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+p,
+figure,
+dl,
+dd,
+ol,
+ul {
+  margin: 0;
+}
+
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--selection);
+}
+
+.wrap {
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.label {
+  font-family: var(--font-label);
+  font-variant-caps: var(--label-caps);
+  letter-spacing: var(--label-track);
+  font-weight: var(--label-weight);
+  font-size: var(--label-size);
+  line-height: 1.4;
+  color: var(--label);
+}
+
+.display-h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--h2);
+  line-height: var(--h2-lh);
+  letter-spacing: var(--track-tight);
+  color: var(--heading);
+}
+
+.display-h3 {
+  font-family: var(--font-display);
+  font-weight: var(--h3-weight);
+  font-size: var(--h3);
+  line-height: var(--h3-lh);
+  color: var(--heading);
+}
+
+.deck {
+  font-family: var(--font-display);
+  font-style: var(--emphasis);
+  font-weight: var(--deck-weight);
+  font-size: var(--deck);
+  line-height: var(--deck-lh);
+}
+
+.prose {
+  max-width: 62ch;
+}
+
+.small {
+  font-size: var(--small);
+  line-height: var(--small-lh);
+  color: var(--muted);
+}
+
+.link {
+  color: var(--heading);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+.link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.section {
+  padding-block-end: clamp(72px, 11vw, 136px);
+}
+
+.section-title {
+  padding-block: clamp(28px, 5vw, 48px) clamp(28px, 4vw, 44px);
+}
+
+.rule-list > li {
+  border-block-start: 1px solid var(--rule);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

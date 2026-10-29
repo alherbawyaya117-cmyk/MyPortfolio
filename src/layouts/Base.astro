@@ -1,0 +1,92 @@
+---
+import '@fontsource-variable/literata/opsz.css';
+import '@fontsource-variable/literata/opsz-italic.css';
+import '@fontsource-variable/hanken-grotesk';
+import '@fontsource-variable/markazi-text';
+import markaziArabic from '@fontsource-variable/markazi-text/files/markazi-text-arabic-wght-normal.woff2?url';
+import literataLatin from '@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2?url';
+import '../styles/global.css';
+import { site } from '../config/site';
+import { getCopy, localeMeta, locales, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** Pages that shouldn't be indexed (e.g. 404). */
+  noindex?: boolean;
+}
+
+const { locale, title, description, noindex = false } = Astro.props;
+const meta = localeMeta[locale];
+const c = getCopy(locale);
+const pageUrl = (l: Locale) => new URL(`/${l}/`, Astro.site).href;
+// Each language preloads only its own headline face; the other fonts load on demand.
+const preloadFont = locale === 'ar' ? markaziArabic : literataLatin;
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: c.name,
+  jobTitle: c.meta.jobTitle,
+  url: pageUrl(locale),
+  address: { '@type': 'PostalAddress', addressLocality: 'Beirut', addressCountry: 'LB' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Lebanese University' },
+  knowsLanguage: ['ar', 'en', 'fr'],
+  sameAs: [site.instagram.url],
+};
+---
+
+<!doctype html>
+<html lang={locale} dir={meta.dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={pageUrl(locale)} />
+    {locales.map((l) => <link rel="alternate" hreflang={l} href={pageUrl(l)} />)}
+    <link rel="alternate" hreflang="x-default" href={pageUrl('en')} />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="theme-color"
+      content={site.colors.lightPaper}
+      media="(prefers-color-scheme: light)"
+      data-default={site.colors.lightPaper}
+    />
+    <meta
+      name="theme-color"
+      content={site.colors.darkPaper}
+      media="(prefers-color-scheme: dark)"
+      data-default={site.colors.darkPaper}
+    />
+    <script is:inline define:vars={{ lightPaper: site.colors.lightPaper, darkPaper: site.colors.darkPaper }}>
+      // Apply a saved theme before first paint so the page never flashes the wrong one.
+      try {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved;
+          const color = saved === 'dark' ? darkPaper : lightPaper;
+          document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', color));
+        }
+      } catch {}
+    </script>
+
+    <link rel="preload" href={preloadFont} as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl(locale)} />
+    <meta property="og:locale" content={meta.ogLocale} />
+    <meta property="og:site_name" content={c.name} />
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

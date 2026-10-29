@@ -1,0 +1,50 @@
+---
+import { getCopy } from '../i18n';
+import Base from '../layouts/Base.astro';
+
+const en = getCopy('en');
+const ar = getCopy('ar');
+---
+
+<Base locale="en" title={`404 · ${en.name}`} description={en.notFound.text} noindex>
+  <main class="wrap page">
+    <section>
+      <p class="label">404</p>
+      <h1 class="display-h2">{en.notFound.title}</h1>
+      <p>{en.notFound.text}</p>
+      <a class="link" href="/en/">{en.notFound.back}</a>
+    </section>
+    <section lang="ar" dir="rtl">
+      <h2 class="display-h2">{ar.notFound.title}</h2>
+      <p>{ar.notFound.text}</p>
+      <a class="link" href="/ar/">{ar.notFound.back}</a>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    padding-block: clamp(48px, 12vw, 140px);
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  section:lang(ar) {
+    font-family: 'Markazi Text Variable', 'Geeza Pro', serif;
+    font-size: 1.3rem;
+    line-height: 1.85;
+  }
+
+  section:lang(ar) .display-h2 {
+    font-family: inherit;
+    line-height: 1.22;
+  }
+</style>

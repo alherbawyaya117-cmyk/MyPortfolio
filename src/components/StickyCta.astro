@@ -1,0 +1,78 @@
+---
+import type { Copy } from '../i18n';
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  c: Copy;
+  waHref: string;
+}
+
+const { c, waHref } = Astro.props;
+---
+
+<div class="sticky" data-sticky-cta>
+  <div class="wrap row">
+    <WhatsAppButton class="button" href={waHref} label={c.cta} placement="sticky" />
+  </div>
+</div>
+
+<style>
+  /* A slim bar in the thumb zone (full width on phones, button at the inline end on desktop).
+     It hides while another WhatsApp button is on screen. */
+  .sticky {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 15;
+    background: var(--paper);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .row {
+    display: flex;
+    justify-content: flex-end;
+    padding-block: 10px calc(10px + env(safe-area-inset-bottom));
+    padding-inline: clamp(16px, 5vw, 56px);
+  }
+
+  /* :global because the class lands on WhatsAppButton's own element, outside this component's scope. */
+  .row :global(.button) {
+    flex: 1 1 auto;
+    max-width: 400px;
+    min-height: 52px;
+  }
+
+  .sticky[data-hidden] {
+    transform: translateY(110%);
+    visibility: hidden;
+  }
+
+  :global(body) {
+    padding-block-end: calc(74px + env(safe-area-inset-bottom));
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sticky {
+      transition:
+        transform 0.25s ease,
+        visibility 0.25s;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-sticky-cta]');
+  const anchors = document.querySelectorAll('[data-cta-anchor]');
+
+  if (bar && anchors.length && 'IntersectionObserver' in window) {
+    const onScreen = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) onScreen.add(entry.target);
+        else onScreen.delete(entry.target);
+      }
+      bar.toggleAttribute('data-hidden', onScreen.size > 0);
+    });
+    anchors.forEach((anchor) => observer.observe(anchor));
+  }
+</script>

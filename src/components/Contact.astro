@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.jpg';
+import { site } from '../config/site';
+import type { Copy } from '../i18n';
+import SectionHead from './SectionHead.astro';
+import WhatsAppButton from './WhatsAppButton.astro';
+
+interface Props {
+  c: Copy;
+  waHref: string;
+}
+
+const { c, waHref } = Astro.props;
+---
+
+<section id="contact" class="wrap contact" aria-labelledby="contact-title">
+  <SectionHead num="06" label={c.nav.sections.contact} />
+  <h2 id="contact-title" class="title">{c.contact.title}</h2>
+  <p class="deck text">{c.contact.text}</p>
+  <div data-cta-anchor>
+    <WhatsAppButton href={waHref} label={c.cta} placement="contact" />
+  </div>
+  <div class="links">
+    <div class="item">
+      <span class="label">{c.contact.instagramLabel}</span>
+      <a class="link value" href={site.instagram.url} target="_blank" rel="noopener">
+        <Image class="avatar" src={logo} alt="" width={48} height={48} densities={[1, 2, 3]} />
+        <bdi>@{site.instagram.handle}</bdi>
+      </a>
+    </div>
+    <div class="item">
+      <span class="label">{c.contact.cvLabel}</span>
+      <a class="link value" href={site.cvPath} download data-track="cv_download">{c.contact.cvLink}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block-end: clamp(64px, 10vw, 120px);
+  }
+
+  .title {
+    max-width: 14ch;
+    padding-block: clamp(28px, 5vw, 48px) 20px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--contact-h);
+    line-height: var(--h1-lh);
+    letter-spacing: var(--track-tight);
+    color: var(--heading);
+  }
+
+  .text {
+    max-width: 40ch;
+    margin-block-end: 28px;
+  }
+
+  /* Row gap keeps the next item's rule off the avatar when the items stack on phones. */
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px 48px;
+    padding-block-start: 48px;
+  }
+
+  .item {
+    flex: 1 1 260px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-block-start: 14px;
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .value {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    font-family: var(--font-display);
+    font-size: var(--fact);
+  }
+
+  /* Her Instagram profile mark. The source is only 150px, so it stays this small. */
+  .avatar {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--rule);
+  }
+</style>

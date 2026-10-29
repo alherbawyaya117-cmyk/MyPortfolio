@@ -1,0 +1,62 @@
+---
+import type { Copy } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  c: Copy;
+}
+
+const { c } = Astro.props;
+---
+
+<section id="services" class="wrap section" aria-labelledby="services-title">
+  <SectionHead num="02" label={c.nav.sections.services} />
+  <h2 id="services-title" class="display-h2 section-title">{c.services.title}</h2>
+  <ol class="grid rule-list">
+    {
+      c.services.items.map((item, i) => (
+        <li class:list={{ upcoming: item.upcoming }}>
+          <span class="num" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h3 class="display-h3">{item.title}</h3>
+          <p>{item.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    column-gap: clamp(24px, 4vw, 56px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-block: 22px 36px;
+  }
+
+  .num {
+    font-family: var(--font-display);
+    font-style: var(--emphasis);
+    font-weight: 300;
+    font-size: var(--numeral-big);
+    line-height: 1;
+    color: var(--numeral);
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  p {
+    max-width: 40ch;
+  }
+
+  .upcoming .num,
+  .upcoming h3 {
+    color: var(--muted);
+  }
+</style>

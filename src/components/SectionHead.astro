@@ -1,0 +1,40 @@
+---
+interface Props {
+  num: string;
+  label: string;
+  tone?: 'paper' | 'band';
+}
+
+const { num, label, tone = 'paper' } = Astro.props;
+---
+
+<div class:list={['head', tone]}>
+  <span class="num">{num}</span>
+  <span class="label">{label}</span>
+</div>
+
+<style>
+  .head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    border-block-start: 1px solid var(--rule-strong);
+    padding-block-start: 14px;
+  }
+
+  .num {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--numeral);
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  .band {
+    border-color: var(--band-rule);
+  }
+
+  .band .num,
+  .band .label {
+    color: var(--band-accent);
+  }
+</style>
