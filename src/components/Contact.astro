@@ -30,6 +30,10 @@ const { c, waHref } = Astro.props;
       </a>
     </div>
     <div class="item">
+      <span class="label">{c.contact.emailLabel}</span>
+      <a class="link value" href={`mailto:${site.email}`} data-track="email_click"><bdi>{site.email}</bdi></a>
+    </div>
+    <div class="item">
       <span class="label">{c.contact.cvLabel}</span>
       <a class="link value" href={site.cvPath} download data-track="cv_download">{c.contact.cvLink}</a>
     </div>
@@ -83,6 +87,7 @@ const { c, waHref } = Astro.props;
     min-height: 44px;
     font-family: var(--font-display);
     font-size: var(--fact);
+    overflow-wrap: anywhere;
   }
 
   /* Her Instagram profile mark. The source is only 150px, so it stays this small. */

@@ -115,6 +115,7 @@ export const en: Copy = {
     title: 'Let’s start with a message.',
     text: 'Tell me what you’d like to change, and I’ll reply on WhatsApp.',
     instagramLabel: 'Instagram',
+    emailLabel: 'Email',
     cvLabel: 'Professional background',
     cvLink: 'Download CV (PDF)',
   },

@@ -126,7 +126,7 @@ Fonts are self-hosted with Fontsource variable packages: Literata (with optical 
 Google Analytics 4 is off until `gaMeasurementId` is set in `src/config/site.ts`. Once it's set:
 
 - `ConsentBanner` asks for consent. The answer is stored in `localStorage['analytics-consent']`, and `gtag.js` loads only after the visitor accepts.
-- Clicks on elements with `data-wa="<placement>"` send a `whatsapp_click` event, and `data-track="<name>"` sends a custom event (the CV link uses `cv_download`).
+- Clicks on elements with `data-wa="<placement>"` send a `whatsapp_click` event, and `data-track="<name>"` sends a custom event (the CV link uses `cv_download`, email links `email_click`).
 - A "Cookie settings" link appears in the footer so visitors can change their answer.
 
 ### localStorage keys
@@ -143,7 +143,7 @@ Google Analytics 4 is off until `gaMeasurementId` is set in `src/config/site.ts`
 | --- | --- |
 | Change any text | `src/i18n/en.ts` and `src/i18n/ar.ts` (keep both in step) |
 | Add a conference | Add an entry at the top of `conferences` in `src/data/learning.ts` |
-| Change phone, Instagram or GA ID | `src/config/site.ts` |
+| Change phone, email, Instagram or GA ID | `src/config/site.ts` |
 | Replace the portrait | Overwrite `src/assets/portrait.jpg` (`.png`/`.webp` also work). It's shown cropped to 4:5 and kept toward the top (`object-position` in `Portrait.astro`). Without a file, a placeholder is shown. |
 | Replace the CV | Overwrite `public/cv/Aya_Al_Herbawy_CV.pdf` (or change `cvPath`) |
 | Replace the logo | Overwrite `src/assets/logo.jpg` (the avatar next to the Instagram link), then regenerate the icons: `sips -s format png -z 32 32 src/assets/logo.jpg --out public/favicon-32.png` and the same with `180 180` for `public/apple-touch-icon.png` |

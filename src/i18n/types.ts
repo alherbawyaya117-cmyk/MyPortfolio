@@ -66,6 +66,7 @@ export interface Copy {
     title: string;
     text: string;
     instagramLabel: string;
+    emailLabel: string;
     cvLabel: string;
     cvLink: string;
   };

@@ -12,6 +12,7 @@ const { c } = Astro.props;
 <footer class="footer">
   <div class="wrap row small">
     <span>{c.footer.rights}</span>
+    <a class="link email" href={`mailto:${site.email}`} data-track="email_click"><bdi>{site.email}</bdi></a>
     {
       site.gaMeasurementId && (
         <button class="link settings" type="button" data-cookie-settings>
@@ -33,6 +34,10 @@ const { c } = Astro.props;
     justify-content: space-between;
     gap: 8px 32px;
     padding-block: 24px 28px;
+  }
+
+  .email {
+    color: var(--muted);
   }
 
   .settings {

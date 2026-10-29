@@ -4,6 +4,7 @@
  */
 export const site = {
   phone: '+961 79 123 496',
+  email: 'Herbawiaya4@gmail.com',
   /** Full international number without "+", spaces or the local leading zero, as wa.me expects. */
   whatsappNumber: '96179123496',
   instagram: {
