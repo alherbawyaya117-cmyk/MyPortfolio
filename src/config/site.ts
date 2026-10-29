@@ -13,7 +13,7 @@ export const site = {
   },
   cvPath: '/cv/Aya_Al_Herbawy_CV.pdf',
   /** Google Analytics 4 measurement ID (G-XXXXXXXXXX). Empty: no analytics and no consent banner. */
-  gaMeasurementId: '',
+  gaMeasurementId: 'G-GS3BDPWW6T',
   colors: {
     lightPaper: '#f2f3ef',
     darkPaper: '#1b1d17',
