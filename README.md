@@ -158,17 +158,19 @@ Google Analytics 4 is off until `gaMeasurementId` is set in `src/config/site.ts`
    - The redirect logic in `src/pages/index.astro`.
    - The single-link language switch in `Header.astro`, which uses `otherLocale()`. It needs to become a small list.
 
-## Deployment (Cloudflare Pages)
+## Deployment (Cloudflare Workers, free plan)
 
-1. Push the repo to GitHub and create a Pages project from it.
+The site is served as static assets by Cloudflare Workers. `wrangler.jsonc` points Wrangler at `dist/` and serves `404.html` for unknown paths. Its `name` must match the Worker's name in the Cloudflare dashboard.
+
+1. In Cloudflare, go to **Workers & Pages → Create → Import a repository** and pick this repo.
 2. Build settings:
-   - Framework preset: Astro
    - Build command: `npm run build`
-   - Output directory: `dist`
-3. Environment variables:
-   - `SITE_URL`: the live origin, e.g. `https://ayaalherbawy.com`. It's used for canonical and `hreflang` URLs. Without it they point at `http://localhost:4321`.
-   - `NODE_VERSION`: `24` (it's also read from `.node-version`).
-4. Add the custom domain in the Pages project.
+   - Deploy command: `npx wrangler deploy`
+   - Preview command: `npx wrangler preview`
+3. Build variables:
+   - `SITE_URL`: the live origin, e.g. `https://myportfolio.<account>.workers.dev` or the custom domain. It's used for canonical and `hreflang` URLs. Without it they point at `http://localhost:4321`.
+   - Node version comes from `.node-version` (24).
+4. Every push to `main` builds and deploys. Add a custom domain under the Worker's **Settings → Domains & Routes**, then update `SITE_URL`.
 
 The output is plain static files, so any static host (Netlify, Vercel, GitHub Pages) works with the same build command and folder.
 
